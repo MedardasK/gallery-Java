@@ -2,7 +2,7 @@ package com.gallery.gallery.security.controller;
 
 import com.gallery.gallery.security.entity.AuthToken;
 import com.gallery.gallery.entity.User;
-import com.gallery.gallery.security.provider.TokenProvider;
+import com.gallery.gallery.security.config.TokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/token")
 public class AuthenticationController {
 
     @Autowired
@@ -23,8 +22,8 @@ public class AuthenticationController {
     @Autowired
     private TokenProvider jwtTokenUtil;
 
-    @PostMapping("/generate-token")
-    public ResponseEntity<?> register(@RequestBody User loginUser) throws AuthenticationException {
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody User loginUser) throws AuthenticationException {
 
         final Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(

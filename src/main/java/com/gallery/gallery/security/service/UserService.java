@@ -11,5 +11,5 @@ public interface UserService {
     User findById(Long id);
     User save(User user);
 
-    List findAll();
+    List<User> findAll();
 }

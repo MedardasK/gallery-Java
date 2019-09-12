@@ -35,12 +35,12 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     private Set getAuthority(User user) {
         Set authorities = new HashSet<>();
         user.getRoles().forEach(role -> {
-            authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getRole()));
+            authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
         });
         return authorities;
     }
 
-    public List findAll() {
+    public List<User> findAll() {
         List list = new ArrayList<>();
         userRepository.findAll().iterator().forEachRemaining(list::add);
         return list;

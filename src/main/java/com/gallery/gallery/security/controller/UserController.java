@@ -32,7 +32,6 @@ public class UserController {
 
     @PostMapping("/signup")
     public User create(@RequestBody User user){
-
         return userService.save(user);
     }
 

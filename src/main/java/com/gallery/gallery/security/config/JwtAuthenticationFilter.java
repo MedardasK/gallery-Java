@@ -1,6 +1,5 @@
-package com.gallery.gallery.security.filter;
+package com.gallery.gallery.security.config;
 
-import com.gallery.gallery.security.provider.TokenProvider;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.SignatureException;
 import org.springframework.beans.factory.annotation.Autowired;
