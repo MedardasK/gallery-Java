@@ -25,16 +25,8 @@ public class User {
     @JsonIgnore
     private String password;
 
-    @Column
-    private boolean enabled;
-
-    @ManyToMany
-    @JoinTable(
-            name = "users_roles",
-            joinColumns = @JoinColumn(
-                    name = "user_id", referencedColumnName = "user_id"),
-            inverseJoinColumns = @JoinColumn(
-                    name = "id", referencedColumnName = "role_id"))
-    private Collection<Role> roles;
+    @ManyToOne
+    @JoinColumn(name = "ROLE_ID", nullable=false)
+    private Role roles;
 
 }

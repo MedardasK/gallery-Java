@@ -13,12 +13,12 @@ public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Basic(optional = false)
-    @Column(name = "role_ID",unique=true, nullable = false)
+    @Column(name = "ROLE_ID",unique=true, nullable = false)
     private String id;
 
     @Column
     private String role;
 
-    @ManyToMany(mappedBy = "roles")
+    @OneToMany(mappedBy = "roles")
     private Collection<User> users;
 }

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class ImageRepImpl implements IImageRepCustom {
+public class ImageCustomImpl implements IImageCustomRep {
 
     @PersistenceContext
     private EntityManager em;

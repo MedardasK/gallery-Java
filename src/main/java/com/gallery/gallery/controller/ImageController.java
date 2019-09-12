@@ -55,8 +55,8 @@ public class ImageController {
         return imageService.getAllImagesByCategories(list);
     }
 
-    @PostMapping("/update/{id}")
-    public Image updateImage(@RequestParam("description") Long id, String description, String name,
+    @PostMapping("/update/{list}")
+    public Image updateImage(@PathVariable("list") Long id, String description, String name,
                              List<Long> categoriesIds, List<Long> tagsIds) {
         return imageService.updateImage(id, description, name, categoriesIds, tagsIds);
     }
