@@ -10,6 +10,9 @@ import java.util.List;
 @Repository
 public interface ITagRepository extends JpaRepository<Tag, Long> {
 
+    List<Tag> findAll();
     List<Tag> findAllByName(String name);
+
+
 
 }
