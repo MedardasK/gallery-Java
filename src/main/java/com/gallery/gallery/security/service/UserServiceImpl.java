@@ -1,6 +1,6 @@
 package com.gallery.gallery.security.service;
 
-import com.gallery.gallery.DAO.IUserRepository;
+import com.gallery.gallery.DAO.IUserRep;
 import com.gallery.gallery.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,7 +19,7 @@ import java.util.Set;
 public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Autowired
-    private IUserRepository userRepository;
+    private IUserRep userRepository;
 
     @Autowired
     private BCryptPasswordEncoder bcryptEncoder;

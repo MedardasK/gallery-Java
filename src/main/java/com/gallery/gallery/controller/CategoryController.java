@@ -1,7 +1,7 @@
 package com.gallery.gallery.controller;
 
 import com.gallery.gallery.entity.Category;
-import com.gallery.gallery.service.CategoryService;
+import com.gallery.gallery.service.ICategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,22 +12,22 @@ import java.util.List;
 public class CategoryController {
 
     @Autowired
-    public CategoryService categoryService;
+    public ICategoryService categoryService;
 
     @GetMapping()
     public List<Category> categoryList(){
         return categoryService.findAllCategories();
     }
 
-    @PostMapping()
-    public void saveCategory(@RequestBody Category category){
-        categoryService.saveCategory(category);
+    @PostMapping("/create")
+    public Category saveCategory(@RequestBody Category category){
+        return categoryService.saveCategory(category);
     }
 
-    @GetMapping("/")
-    @ResponseBody
-    public String getFoos(@RequestParam List<String> id) {
-        return "ID: " + id;
+    //    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/delete/{id}")
+    public void deleteCategory(@PathVariable("id") Long id){
+        categoryService.deleteCategory(id);
     }
 
 //    @GetMapping("/{id}")
@@ -39,18 +39,5 @@ public class CategoryController {
 //    public Category updateCategory(@RequestBody Category category){
 //        return categoryService.updateCategory(category);
 //    }
-//
-//    @PreAuthorize("hasRole('ADMIN')")
-//    @DeleteMapping("/delete")
-//    public void deleteCategory(@RequestBody Category category){
-//        categoryService.deleteCategory(category);
-//    }
-//
-//    @PreAuthorize("hasRole('ADMIN')")
-//    @DeleteMapping("/delete/{id}")
-//    public void deleteCategory(@PathVariable("id") int id){
-//        categoryService.deleteCategory(id);
-//    }
-
 
 }

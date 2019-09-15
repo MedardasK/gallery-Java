@@ -11,8 +11,6 @@ import java.io.IOException;
 
 public class ImageResizeUtil {
 
-    public static ImageResizeUtil imageResizeUtil = new ImageResizeUtil();
-
     public static ResizedImage resize(byte[] fileData) throws IOException {
         ByteArrayInputStream inputStream = new ByteArrayInputStream(fileData);
         ResizedImage resizedImage = new ResizedImage();

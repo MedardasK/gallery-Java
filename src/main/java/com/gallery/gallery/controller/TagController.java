@@ -1,7 +1,8 @@
 package com.gallery.gallery.controller;
 
 import com.gallery.gallery.entity.Tag;
-import com.gallery.gallery.service.TagService;
+import com.gallery.gallery.service.ITagService;
+import com.gallery.gallery.service.implementations.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,16 +17,16 @@ public class TagController {
 
 
     @Autowired
-    private TagService tagService;
+    private ITagService tagService;
 
     // Get All Tags
-    @GetMapping("/")
+    @GetMapping("")
     public List<Tag> getAllTags() {
         return tagService.getAllTags();
     }
 
     // Create a new Tag
-    @PostMapping("/")
+    @PostMapping("/create")
     public Tag saveTag(@RequestBody Tag tag) {
         return tagService.saveTag(tag);
     }
@@ -51,16 +52,10 @@ public class TagController {
         return updatedTag;
     }
 
-    // Delete Tag
-    @DeleteMapping("/tag/{id}")
-    public ResponseEntity<?> deleteTag(@PathVariable(value = "id") Long tagId) {
-        // ar cia veikia?
-        Tag tag = tagService.getTagById(tagId);
-        // .orElseThrow(() -> new ResourceNotFoundException("Tag", "id", tagId))
-
-        tagService.deleteTag(tagId);
-
-        return ResponseEntity.ok().build();
+    //    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/delete/{id}")
+    public void deleteTag(@PathVariable("id") Long id){
+        tagService.deleteTag(id);
     }
 
 }

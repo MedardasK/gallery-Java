@@ -30,7 +30,7 @@ public class UserController {
         return userService.findById(id);
     }
 
-    @PostMapping("/signup")
+    @PostMapping("/register")
     public User create(@RequestBody User user){
         return userService.save(user);
     }

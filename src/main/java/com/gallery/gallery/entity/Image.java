@@ -1,11 +1,13 @@
 package com.gallery.gallery.entity;
 
 import lombok.Data;
+import lombok.NonNull;
 
 import javax.persistence.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -18,6 +20,7 @@ public class Image {
     @Column(name = "ID",unique=true, nullable = false)
     private Long id;
 
+    @NonNull
     @Column(name = "DATA")
     private byte[] data;
 
@@ -65,13 +68,13 @@ public class Image {
 
     @JoinColumn(name = "IMAGE_FULL_ID")
     @OneToOne(cascade = CascadeType.ALL)
-//    @Transient
     private ImageFull imageFull;
 
     public Image() {
     }
 
-    public Image(String name, String type, long size, byte[] data, String description, Integer height, Integer width, ImageFull imageFull) {
+    public Image(String name, String type, long size, byte[] data, String description, Integer height,
+                 Integer width, ImageFull imageFull, Set<Category> categories, Set<Tag> tags) {
         this.name = name;
         this.type = type;
         this.size = size;
@@ -80,6 +83,7 @@ public class Image {
         this.width = width;
         this.description = description;
         this.imageFull = imageFull;
+        this.categories = categories;
+        this.tags = tags;
     }
-
 }

@@ -1,43 +1,39 @@
-package com.gallery.gallery.service;
+package com.gallery.gallery.service.implementations;
 
 
-import com.gallery.gallery.DAO.ITagRepository;
+import com.gallery.gallery.DAO.ITagRep;
 import com.gallery.gallery.entity.Tag;
 import com.gallery.gallery.exceptions.MyFileNotFoundException;
+import com.gallery.gallery.service.ITagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class TagService {
+public class TagService implements ITagService {
+
     @Autowired
-    private ITagRepository ITagRepository;
+    private ITagRep tagRepository;
 
     public List<Tag> getAllTags() {
-        return ITagRepository.findAll();
+        return tagRepository.findAll();
     }
 
     public Tag getTagById(Long tagId) {
-        return ITagRepository.findById(tagId)
+        return tagRepository.findById(tagId)
                 .orElseThrow(() -> new MyFileNotFoundException("Tag not found with id " + tagId));
     }
 
-    public List<Tag> getTagsByName(String tagName) {
-        return ITagRepository.findAllByName(tagName);
-    }
-
     public void deleteTag(Long tagId) {
-        ITagRepository.deleteById(tagId)
+        tagRepository.deleteById(tagId)
                /* .orElseThrow(() -> new MyFileNotFoundException("Tag not found with id " + tagId) {
                 })*/
                 ;
     }
 
-
-
     public Tag saveTag(Tag tag) {
-        return ITagRepository.save(tag);
+        return tagRepository.save(tag);
     }
 
 }

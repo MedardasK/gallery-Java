@@ -28,11 +28,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
-        String header = req.getHeader("header");
+        String header = req.getHeader("Authorization");
+
+        System.out.println("Authorization  " + header);
         String username = null;
         String authToken = null;
-        if (header != null && header.startsWith("bearer")) {
-            authToken = header.replace("bearer","");
+        if (header != null && header.startsWith("Bearer")) {
+            authToken = header.replace("Bearer","");
             try {
                 username = jwtTokenUtil.getUsernameFromToken(authToken);
             } catch (IllegalArgumentException e) {

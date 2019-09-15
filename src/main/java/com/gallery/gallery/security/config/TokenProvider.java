@@ -53,7 +53,7 @@ public class TokenProvider {
                 .collect(Collectors.joining(","));
         return Jwts.builder()
                 .setSubject(authentication.getName())
-                .claim("claims", authorities)
+                .claim("Authorization", authorities)
                 .signWith(SignatureAlgorithm.HS256, jwtSecret)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 5*60*60*1000))
@@ -76,7 +76,7 @@ public class TokenProvider {
         final Claims claims = claimsJws.getBody();
 
         final Collection<? extends GrantedAuthority> authorities =
-                Arrays.stream(claims.get("scopes").toString().split(","))
+                Arrays.stream(claims.get("Authorization").toString().split(","))
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
