@@ -1,17 +1,14 @@
 package com.gallery.gallery.service;
 
-import com.gallery.gallery.entity.Category;
 import com.gallery.gallery.entity.Image;
-import com.gallery.gallery.entity.Tag;
 import com.gallery.gallery.payload.ImageUpdate;
-import org.springframework.web.multipart.MultipartFile;
+import com.gallery.gallery.payload.ImageUpload;
 
 import java.util.List;
-import java.util.Set;
 
 public interface IImageService {
 
-    Image saveImage(MultipartFile file, String description, Set<Category> categories, Set<Tag> tags);
+    Image saveImage(ImageUpload imageUpload);
 
     Image getImage(Long imageId);
 

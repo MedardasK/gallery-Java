@@ -29,10 +29,4 @@ public class CategoryService implements ICategoryService {
                 })*/
         ;
     }
-
-//
-//    Category getCategory(int categoryId);
-//    Category updateCategory(Category category);
-//    void deleteCategory(Category category);
-//    void deleteCategory(int id);
 }

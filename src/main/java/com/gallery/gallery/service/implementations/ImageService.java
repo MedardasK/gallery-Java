@@ -10,6 +10,7 @@ import com.gallery.gallery.entity.Tag;
 import com.gallery.gallery.exceptions.FileStorageException;
 import com.gallery.gallery.exceptions.MyFileNotFoundException;
 import com.gallery.gallery.payload.ImageUpdate;
+import com.gallery.gallery.payload.ImageUpload;
 import com.gallery.gallery.payload.ResizedImage;
 import com.gallery.gallery.service.IImageService;
 import com.gallery.gallery.util.ImageResizeUtil;
@@ -23,6 +24,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,9 +43,11 @@ public class ImageService implements IImageService {
     @Autowired
     private ICategoryRep categoryRep;
 
-    public Image saveImage(MultipartFile file, String description, Set<Category> categories, Set<Tag> tags) {
+    public Image saveImage(ImageUpload imageUpload) {
+        MultipartFile file = imageUpload.getFile();
         String imageName = StringUtils.cleanPath(file.getOriginalFilename());
         try {
+
             if(imageName.contains("..")) {
                 throw new MyFileNotFoundException("Filename contains invalid path sequence " + imageName);
             }
@@ -54,12 +58,32 @@ public class ImageService implements IImageService {
             ImageFull full = new ImageFull();
             full.setData(file.getBytes());
             Image image = new Image(imageString, file.getContentType(), file.getSize(),
-                    resizedImage.getData(), description, resizedImage.getHeight(), resizedImage.getWidth(), full, categories, tags);
+                    resizedImage.getData(), imageUpload.getDescription(), resizedImage.getHeight(),
+                    resizedImage.getWidth(), full, imageUpload.getCategories(), imageUpload.getTags());
             return imageRep.save(image);
         } catch (IOException ex) {
             throw new FileStorageException("Could not store file " + imageName + ". Please try again!", ex);
         }
     }
+//   public Image saveImage(MultipartFile file, String description, Set<Category> categories, Set<Tag> tags) {
+//        String imageName = StringUtils.cleanPath(file.getOriginalFilename());
+//        try {
+//            if(imageName.contains("..")) {
+//                throw new MyFileNotFoundException("Filename contains invalid path sequence " + imageName);
+//            }
+//            String imageString = imageName.substring(0, imageName.lastIndexOf("."));
+//
+//            ResizedImage resizedImage = ImageResizeUtil.resize(file.getBytes());
+//
+//            ImageFull full = new ImageFull();
+//            full.setData(file.getBytes());
+//            Image image = new Image(imageString, file.getContentType(), file.getSize(),
+//                    resizedImage.getData(), description, resizedImage.getHeight(), resizedImage.getWidth(), full, categories, tags);
+//            return imageRep.save(image);
+//        } catch (IOException ex) {
+//            throw new FileStorageException("Could not store file " + imageName + ". Please try again!", ex);
+//        }
+//    }
 
     public Image getImage(Long imageId) {
         return imageRep.findById(imageId)
