@@ -3,6 +3,7 @@ package com.gallery.gallery.service;
 import com.gallery.gallery.entity.Image;
 import com.gallery.gallery.payload.ImageUpdate;
 import com.gallery.gallery.payload.ImageUpload;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
