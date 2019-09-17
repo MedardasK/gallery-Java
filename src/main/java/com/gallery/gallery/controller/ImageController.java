@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("images")
@@ -34,14 +35,20 @@ public class ImageController {
 
 //    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteFile(@PathVariable(value = "id") Long imageId) {
-        // checkint??
-        imageService.deleteImage(imageId);
+    public ResponseEntity<?> deleteFile(@PathVariable(value = "id") Long Id) {
+        imageService.deleteImage(Id);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/update/{imageUpdate}")
     public Image updateImage(@RequestBody ImageUpdate imageUpdate) {
         return imageService.updateImage(imageUpdate);
+    }
+
+    @GetMapping("/search/{searchString}{tagsIds}{categoriesIds}")
+    public List<Image> getAllImagesBySearch(@PathVariable(value = "searchString") String searchString,
+                                            @PathVariable(value = "tagsIds") Set<Long> tagsIds,
+                                            @PathVariable(value = "categoriesIds") Set<Long> categoriesIds) {
+        return imageService.getAllImagesBySearch(searchString, tagsIds, categoriesIds);
     }
 }

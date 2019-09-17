@@ -26,10 +26,7 @@ public class TagService implements ITagService {
     }
 
     public void deleteTag(Long tagId) {
-        tagRepository.deleteById(tagId)
-               /* .orElseThrow(() -> new MyFileNotFoundException("Tag not found with id " + tagId) {
-                })*/
-                ;
+        tagRepository.deleteById(tagId);
     }
 
     public Tag saveTag(Tag tag) {

@@ -6,6 +6,7 @@ import com.gallery.gallery.payload.ImageUpload;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Set;
 
 public interface IImageService {
 
@@ -17,9 +18,7 @@ public interface IImageService {
 
     void deleteImage(Long fileId);
 
-    List<Image> customFindByNameDes(String text);
-
-    List<Image> customFindByAny(String text);
+    List<Image> getAllImagesBySearch(String searchString, Set<Long> tagsIds,Set<Long> categoriesIds);
 
     Image updateImage(ImageUpdate imageUpdate);
 }
