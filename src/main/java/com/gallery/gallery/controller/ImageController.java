@@ -41,7 +41,7 @@ public class ImageController {
     }
 
     @PostMapping("/update/{imageUpdate}")
-    public Image updateImage(@RequestBody ImageUpdate imageUpdate) {
+    public Image updateImage(@ModelAttribute ImageUpdate imageUpdate) {
         return imageService.updateImage(imageUpdate);
     }
 

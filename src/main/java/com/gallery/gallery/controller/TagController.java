@@ -10,7 +10,6 @@ import java.util.List;
 @RequestMapping("tags")
 public class TagController {
 
-
     @Autowired
     private ITagService tagService;
 
@@ -21,8 +20,9 @@ public class TagController {
     }
 
     // Create a new Tag
-    @PostMapping("/create")
-    public Tag saveTag(@RequestBody Tag tag) {
+    @PostMapping("/create/{tag}")
+    public Tag saveTag(@RequestParam(value = "tag") String tag) {
+        System.out.println("test");
         return tagService.saveTag(tag);
     }
 

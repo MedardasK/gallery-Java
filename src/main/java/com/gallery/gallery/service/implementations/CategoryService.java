@@ -19,9 +19,14 @@ public class CategoryService implements ICategoryService {
         return (List<Category>) categoryRep.findAll();
     }
 
-    public Category saveCategory(Category category) {
+    public Category saveCategory(String name) {
+        Category category = new Category();
+        category.setName(name);
         return categoryRep.save(category);
     }
+//    public Category saveCategory(Category category) {
+//        return categoryRep.save(category);
+//    }
 
     public void deleteCategory(Long tagId) {
         categoryRep.deleteById(tagId)

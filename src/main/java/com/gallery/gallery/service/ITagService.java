@@ -9,6 +9,6 @@ public interface ITagService {
     List<Tag> getAllTags();
     Tag getTagById(Long tagId);
     void deleteTag(Long tagId);
-    Tag saveTag(Tag tag);
+    Tag saveTag(String tag);
 
 }

@@ -29,7 +29,10 @@ public class TagService implements ITagService {
         tagRepository.deleteById(tagId);
     }
 
-    public Tag saveTag(Tag tag) {
+    public Tag saveTag(String name) {
+        Tag tag = new Tag();
+        tag.setName(name);
+
         return tagRepository.save(tag);
     }
 

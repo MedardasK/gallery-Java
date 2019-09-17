@@ -8,7 +8,8 @@ public interface ICategoryService {
 
     List<Category> findAllCategories();
 
-    Category saveCategory(Category category);
+    Category saveCategory(String name);
+//    Category saveCategory(Category category);
 
     void deleteCategory(Long id);
 }

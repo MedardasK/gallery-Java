@@ -20,9 +20,17 @@ public class CategoryController {
     }
 
     @PostMapping("/create")
-    public Category saveCategory(@RequestBody Category category){
-        return categoryService.saveCategory(category);
+    public Category saveCategory(@RequestParam String category) {
+        System.out.println("name");
+        String cat = "asd";
+        return categoryService.saveCategory(cat);
     }
+
+//@PostMapping("/create")
+//    public Category saveCategory(@RequestBody Category category){
+//        System.out.println("test");
+//        return categoryService.saveCategory(category);
+//    }
 
     //    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete/{id}")
