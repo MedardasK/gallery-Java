@@ -20,7 +20,7 @@ public class TagController {
     private ITagService tagService;
 
     // Get All Tags
-    @GetMapping("")
+    @GetMapping()
     public List<Tag> getAllTags() {
         return tagService.getAllTags();
     }
@@ -35,21 +35,6 @@ public class TagController {
     @GetMapping("/tag/{id}")
     public Tag getTagById(@PathVariable(value = "id") Long tagId) {
         return tagService.getTagById(tagId);
-        // .orElseThrow(() -> new ResourceNotFoundException("Tag", "id", tagId))
-    }
-
-    // Update Tag
-    @PutMapping("/tag/{id}")
-    public Tag updateTag(@PathVariable(value = "id") Long tagId,
-                           @Valid @RequestBody Tag tagName) {
-
-        Tag tag = tagService.getTagById(tagId);
-        //  .orElseThrow(() -> new ResourceNotFoundException("Tag", "id", tagId))
-
-        tagName.setName(tagName.getName());
-
-        Tag updatedTag = tagService.saveTag(tag);
-        return updatedTag;
     }
 
     //    @PreAuthorize("hasRole('ADMIN')")

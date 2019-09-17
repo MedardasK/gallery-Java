@@ -3,8 +3,6 @@ package com.gallery.gallery.entity;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,9 +19,6 @@ public class Tag {
 
     @Column(name = "NAME")
     private String name;
-
-    @Column(name = "DATE")
-    private String date = new SimpleDateFormat("yyyy.MM.dd").format(new Date());
 
     @ManyToMany(mappedBy = "tags")
     private Set<Image> files = new HashSet<>();

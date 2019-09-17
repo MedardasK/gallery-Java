@@ -31,11 +31,6 @@ public class ImageController {
         return imageService.saveImage(imageUpload);
     }
 
-//    @PostMapping("/upload")
-//    public Image uploadFile(@RequestParam("file") MultipartFile image, String description,
-//                            Set<Category> categories, Set<Tag> tags) {
-//        return imageService.saveImage(image, description, categories, tags);
-//    }
 
 //    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete/{id}")

@@ -46,7 +46,6 @@ public class ImageService implements IImageService {
     public Image saveImage(ImageUpload imageUpload) {
         MultipartFile file = imageUpload.getFile();
         String imageName = StringUtils.cleanPath(file.getOriginalFilename());
-        System.out.println(file);
         try {
             if(imageName.contains("..")) {
                 throw new MyFileNotFoundException("Filename contains invalid path sequence " + imageName);
@@ -58,8 +57,8 @@ public class ImageService implements IImageService {
             ImageFull full = new ImageFull();
             full.setData(file.getBytes());
             Image image = new Image(imageString, file.getContentType(), file.getSize(),
-                    resizedImage.getData(), "ada", resizedImage.getHeight(),
-                    resizedImage.getWidth(), full, null, null);
+                    resizedImage.getData(), imageUpload.getDescription(), resizedImage.getHeight(),
+                    resizedImage.getWidth(), full, imageUpload.getCategories(), imageUpload.getTags());
             return imageRep.save(image);
         } catch (IOException ex) {
             throw new FileStorageException("Could not store file " + imageName + ". Please try again!", ex);

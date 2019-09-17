@@ -15,16 +15,11 @@ public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-//    @Basic(optional = false)
-    // @Column(name = "ID",unique=true, nullable = false)
     @Column(name = "CATEGORY_ID", updatable = false, nullable = false)
     private Long id;
 
     @Column(name = "NAME")
     private String name;
-
-    @Column(name = "DATE")
-    private String date = new SimpleDateFormat("yyyy.MM.dd").format(new Date());
 
     @ManyToMany(mappedBy = "categories")
     private Set<Image> image = new HashSet<>();
