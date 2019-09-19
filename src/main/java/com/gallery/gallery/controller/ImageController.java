@@ -40,15 +40,15 @@ public class ImageController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/update")
+    @PutMapping("/update")
     public Image updateImage(@ModelAttribute ImageUpdate imageUpdate) {
         return imageService.updateImage(imageUpdate);
     }
 
     @GetMapping("/search/{searchString}{tagsIds}{categoriesIds}")
     public List<Image> getAllImagesBySearch(@PathVariable(value = "searchString") String searchString,
-                                            @PathVariable(value = "tagsIds") Set<Long> tagsIds,
-                                            @PathVariable(value = "categoriesIds") Set<Long> categoriesIds) {
+                                            @PathVariable(value = "tagsIds") List<Long> tagsIds,
+                                            @PathVariable(value = "categoriesIds") List<Long> categoriesIds) {
         return imageService.getAllImagesBySearch(searchString, tagsIds, categoriesIds);
     }
 }

@@ -21,10 +21,9 @@ public class TagController {
     }
 
     // Create a new Tag
-    @PostMapping("/create/{tag}")
-    public Tag saveTag(@RequestParam(value = "tag") String tag) {
-        System.out.println("test");
-        return tag != null ? tagService.saveTag(tag) : null;
+    @PostMapping("/create")
+    public Tag saveTag(@RequestBody String name) {
+        return tagService.saveTag(name);
     }
 
     // Get a Single Tag

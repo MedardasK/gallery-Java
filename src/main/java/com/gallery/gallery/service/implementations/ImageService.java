@@ -8,7 +8,7 @@ import com.gallery.gallery.entity.Image;
 import com.gallery.gallery.entity.ImageFull;
 import com.gallery.gallery.entity.Tag;
 import com.gallery.gallery.exceptions.FileStorageException;
-import com.gallery.gallery.exceptions.MyFileNotFoundException;
+import com.gallery.gallery.exceptions.NotFoundException;
 import com.gallery.gallery.payload.ImageUpdate;
 import com.gallery.gallery.payload.ImageUpload;
 import com.gallery.gallery.payload.ResizedImage;
@@ -20,9 +20,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -43,7 +41,7 @@ public class ImageService implements IImageService {
         String imageName = StringUtils.cleanPath(file.getOriginalFilename());
         try {
             if(imageName.contains("..")) {
-                throw new MyFileNotFoundException("Filename contains invalid path sequence " + imageName);
+                throw new NotFoundException("Filename contains invalid path sequence " + imageName);
             }
             String imageString = imageName.substring(0, imageName.lastIndexOf("."));
 
@@ -61,7 +59,7 @@ public class ImageService implements IImageService {
     }
     public Image getImage(Long imageId) {
         return imageRep.findById(imageId)
-                .orElseThrow(() -> new MyFileNotFoundException("File not found with id " + imageId));
+                .orElseThrow(() -> new NotFoundException("File not found with id " + imageId));
     }
 
     public List<Image> getAllImages() {

@@ -20,9 +20,13 @@ public class CategoryService implements ICategoryService {
     }
 
     public Category saveCategory(String name) {
-        Category category = new Category();
-        category.setName(name);
-        return categoryRep.save(category);
+        if (name != null){
+            Category category = new Category();
+            category.setName(name);
+            return categoryRep.save(category);
+        } else {
+            return null;
+        }
     }
 
     public void deleteCategory(Long tagId) {

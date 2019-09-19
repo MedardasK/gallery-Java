@@ -20,9 +20,8 @@ public class CategoryController {
         return categoryService.findAllCategories();
     }
 
-    @PostMapping("/create/{name}")
-    public Category saveCategory(@RequestParam String name) {
-        System.out.println("test");
+    @PostMapping("/create")
+    public Category createCategory(@RequestBody String name) {
         return categoryService.saveCategory(name);
     }
 
