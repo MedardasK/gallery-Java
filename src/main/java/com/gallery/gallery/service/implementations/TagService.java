@@ -32,7 +32,6 @@ public class TagService implements ITagService {
     public Tag saveTag(String name) {
         Tag tag = new Tag();
         tag.setName(name);
-
         return tagRepository.save(tag);
     }
 

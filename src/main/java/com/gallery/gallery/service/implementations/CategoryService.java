@@ -16,7 +16,7 @@ public class CategoryService implements ICategoryService {
     private ICategoryRep categoryRep;
 
     public List<Category> findAllCategories() {
-        return (List<Category>) categoryRep.findAll();
+        return categoryRep.findAll();
     }
 
     public Category saveCategory(String name) {
@@ -24,14 +24,8 @@ public class CategoryService implements ICategoryService {
         category.setName(name);
         return categoryRep.save(category);
     }
-//    public Category saveCategory(Category category) {
-//        return categoryRep.save(category);
-//    }
 
     public void deleteCategory(Long tagId) {
-        categoryRep.deleteById(tagId)
-               /* .orElseThrow(() -> new MyFileNotFoundException("Category not found with id " + categoryId) {
-                })*/
-        ;
+        categoryRep.deleteById(tagId);
     }
 }

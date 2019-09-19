@@ -1,8 +1,8 @@
-package com.gallery.gallery.security.controller;
+package com.gallery.gallery.controller;
 
-import com.gallery.gallery.security.entity.AuthToken;
+import com.gallery.gallery.payload.AuthToken;
 import com.gallery.gallery.entity.User;
-import com.gallery.gallery.security.config.TokenProvider;
+import com.gallery.gallery.config.TokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;

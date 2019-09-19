@@ -1,4 +1,4 @@
-package com.gallery.gallery.security.config;
+package com.gallery.gallery.config;
 
 
 import io.jsonwebtoken.*;
@@ -53,10 +53,10 @@ public class TokenProvider {
                 .collect(Collectors.joining(","));
         return Jwts.builder()
                 .setSubject(authentication.getName())
-                .claim("Authorization", authorities)
+                .claim("auth", authorities)
                 .signWith(SignatureAlgorithm.HS256, jwtSecret)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 5*60*60*1000))
+                .setExpiration(new Date(System.currentTimeMillis() + 18000*1000))
                 .compact();
     }
 
@@ -76,7 +76,7 @@ public class TokenProvider {
         final Claims claims = claimsJws.getBody();
 
         final Collection<? extends GrantedAuthority> authorities =
-                Arrays.stream(claims.get("Authorization").toString().split(","))
+                Arrays.stream(claims.get("auth").toString().split(","))
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 

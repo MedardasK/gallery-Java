@@ -1,4 +1,4 @@
-package com.gallery.gallery.security.entity;
+package com.gallery.gallery.payload;
 
 import lombok.Data;
 

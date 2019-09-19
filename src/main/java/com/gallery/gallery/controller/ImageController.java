@@ -35,12 +35,12 @@ public class ImageController {
 
 //    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteFile(@PathVariable(value = "id") Long Id) {
-        imageService.deleteImage(Id);
+    public ResponseEntity<?> deleteFile(@PathVariable(value = "id") Long id) {
+        imageService.deleteImage(id);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/update/{imageUpdate}")
+    @PostMapping("/update")
     public Image updateImage(@ModelAttribute ImageUpdate imageUpdate) {
         return imageService.updateImage(imageUpdate);
     }

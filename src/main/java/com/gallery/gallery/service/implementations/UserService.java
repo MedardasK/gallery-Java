@@ -1,7 +1,11 @@
-package com.gallery.gallery.security.service;
+package com.gallery.gallery.service.implementations;
+
 
 import com.gallery.gallery.DAO.IUserRep;
+import com.gallery.gallery.entity.Role;
 import com.gallery.gallery.entity.User;
+import com.gallery.gallery.service.IRoleService;
+import com.gallery.gallery.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,10 +20,13 @@ import java.util.List;
 import java.util.Set;
 
 @Service(value = "userService")
-public class UserServiceImpl implements UserDetailsService, UserService {
+public class UserService implements UserDetailsService, IUserService {
 
     @Autowired
     private IUserRep userRepository;
+
+    @Autowired
+    private IRoleService roleService;
 
     @Autowired
     private BCryptPasswordEncoder bcryptEncoder;
@@ -63,9 +70,17 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Override
     public User save(User user) {
-        User newUser = new User();
-        newUser.setUsername(user.getUsername());
-        newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
-        return userRepository.save(newUser);
+
+        if (userRepository.findByUsername(user.getUsername()) == null || user.getUsername() != null){
+            User newUser = new User();
+            newUser.setUsername(user.getUsername());
+            newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
+            Set<Role> roles = new HashSet<>();
+            roles.add(roleService.findByRoleName("USER"));
+            newUser.setRoles(roles);
+            return userRepository.save(newUser);
+        } else {
+            return null;
+        }
     }
 }

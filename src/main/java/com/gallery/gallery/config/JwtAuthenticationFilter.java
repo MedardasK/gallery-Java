@@ -1,9 +1,10 @@
-package com.gallery.gallery.security.config;
+package com.gallery.gallery.config;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.SignatureException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,13 +27,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private TokenProvider jwtTokenUtil;
 
+    @Value("${jwt.head}")
+    private String head;
+
+    @Value("${jwt.token}")
+    private String token;
+
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
-        String header = req.getHeader("Authorization");
+        String header = req.getHeader(head);
         String username = null;
         String authToken = null;
-        if (header != null && header.startsWith("Bearer")) {
-            authToken = header.replace("Bearer","");
+        if (header != null && header.startsWith(token)) {
+            authToken = header.replace(token,"");
             try {
                 username = jwtTokenUtil.getUsernameFromToken(authToken);
             } catch (IllegalArgumentException e) {

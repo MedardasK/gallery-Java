@@ -88,44 +88,91 @@ public class ImageService implements IImageService {
         return  imageRep.save(image);
     };
 
-    public List<Image> customFindByNameDes(String text) {
+    public List<Image> customFindByNameDes(String search) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Image> cq = cb.createQuery(Image.class);
         Root<Image> root = cq.from(Image.class);
         cq.select(root);
         List<Predicate> predicates = new ArrayList<>();
-        if(text!=null) {
+        if(search!=null) {
             predicates.add(cb.or(
-                    cb.like(root.get("name"), "%" + text + "%"),
-                    cb.like(root.get("description"), "%" + text + "%"))
+                    cb.like(root.get("name"), "%" + search + "%"),
+                    cb.like(root.get("description"), "%" + search + "%"))
             );
         }
         return (List<Image>) cb.and(predicates.toArray(new Predicate[predicates.size()]));
     }
 
-    public List<Image> getAllImagesBySearch(String searchString, Set<Long> tagsIds,Set<Long> categoriesIds) {
+    public List<Image> getAllImagesBySearch(String searchString, List<Long> tagsIds, List<Long> categoriesIds) {
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Image> cq = cb.createQuery(Image.class);
         Root<Image> root = cq.from(Image.class);
 
-        List<Image> imagesCollected = new ArrayList<>();
-
         Join<Image, Tag> tags = root.join("tags", JoinType.LEFT);
         Join<Image, Category> categories = root.join("categories", JoinType.LEFT);
-//        Class<? extends Category> subclass = Image.class;
         cq.select(root);
 
         Predicate predicate = null;
+        Predicate search = null;
+        Predicate tagsSearch = null;
+        Predicate categoriesSearch = null;
 
 
+        if (!searchString.isEmpty()) {
+            Predicate namePredicate = cb.like(root.get("name"), "%" + searchString + "%");
+            Predicate descriptionPredicate = cb.like(root.get("description"), "%" + searchString + "%");
+            search = cb.or(namePredicate, descriptionPredicate);
+        }
+        if (tagsIds.size() > 0) {
+            tagsSearch = cb.equal(tags.get("id"), tagsIds.get(0));
+            if (tagsIds.size() > 1) {
+                for (int i = 1; i < tagsIds.size(); i++) {
+                    Predicate currentPredicate = cb.equal(tags.get("id"), tagsIds.get(i));
+                    tagsSearch = cb.or(tagsSearch, currentPredicate);
+                }
+            }
+        }
+        if (categoriesIds.size() > 0) {
+            categoriesSearch = cb.equal(categories.get("id"), categoriesIds.get(0));
+            if (categoriesIds.size() > 1) {
+                for (int i = 1; i < categoriesIds.size(); i++) {
+                    Predicate currentPredicate = cb.equal(categories.get("id"), categoriesIds.get(i));
+                    categoriesSearch = cb.or(categoriesSearch, currentPredicate);
+                }
+            }
+        }
 
+        if (search != null) {
+            predicate = search;
+        }
 
+        if (tagsSearch != null) {
+            if (predicate != null) {
+                predicate = cb.and(predicate, tagsSearch);
+            } else {
+                predicate = tagsSearch;
+            }
+        }
 
-        cq.where(predicate);
+        if (categoriesSearch != null) {
+            if (predicate != null) {
+                predicate = cb.and(predicate, categoriesSearch);
+            } else {
+                predicate = categoriesSearch;
+            }
+        }
 
-        List<Image> imagesWithoutDuplicates = new ArrayList<>(
-                new HashSet<>(imagesCollected));
-        return imagesWithoutDuplicates;
+        if (predicate != null) {
+
+            cq.where(predicate);
+            List<Image> filteredImages = new ArrayList<>(
+                    new HashSet<>(em.createQuery(cq).getResultList()));
+            return filteredImages;
+        } else {
+            return null;
+        }
+
     }
+
 }

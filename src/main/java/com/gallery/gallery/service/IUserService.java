@@ -1,10 +1,10 @@
-package com.gallery.gallery.security.service;
+package com.gallery.gallery.service;
 
 import com.gallery.gallery.entity.User;
 
 import java.util.List;
 
-public interface UserService {
+public interface IUserService {
 
     void delete(Long id);
     User findOne(String username);

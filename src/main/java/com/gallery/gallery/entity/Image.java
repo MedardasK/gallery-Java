@@ -14,6 +14,7 @@ import java.util.Set;
 @Entity
 @Table(name = "IMAGE")
 public class Image {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Basic(optional = false)

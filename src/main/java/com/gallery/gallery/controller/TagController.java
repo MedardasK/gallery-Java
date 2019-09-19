@@ -3,6 +3,7 @@ package com.gallery.gallery.controller;
 import com.gallery.gallery.entity.Tag;
 import com.gallery.gallery.service.ITagService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class TagController {
     @PostMapping("/create/{tag}")
     public Tag saveTag(@RequestParam(value = "tag") String tag) {
         System.out.println("test");
-        return tagService.saveTag(tag);
+        return tag != null ? tagService.saveTag(tag) : null;
     }
 
     // Get a Single Tag
@@ -32,7 +33,7 @@ public class TagController {
         return tagService.getTagById(tagId);
     }
 
-    //    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete/{id}")
     public void deleteTag(@PathVariable("id") Long id){
         tagService.deleteTag(id);

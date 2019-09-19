@@ -3,6 +3,7 @@ package com.gallery.gallery.controller;
 import com.gallery.gallery.entity.Category;
 import com.gallery.gallery.service.ICategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,20 +20,13 @@ public class CategoryController {
         return categoryService.findAllCategories();
     }
 
-    @PostMapping("/create")
-    public Category saveCategory(@RequestParam String category) {
-        System.out.println("name");
-        String cat = "asd";
-        return categoryService.saveCategory(cat);
+    @PostMapping("/create/{name}")
+    public Category saveCategory(@RequestParam String name) {
+        System.out.println("test");
+        return categoryService.saveCategory(name);
     }
 
-//@PostMapping("/create")
-//    public Category saveCategory(@RequestBody Category category){
-//        System.out.println("test");
-//        return categoryService.saveCategory(category);
-//    }
-
-    //    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete/{id}")
     public void deleteCategory(@PathVariable("id") Long id){
         categoryService.deleteCategory(id);

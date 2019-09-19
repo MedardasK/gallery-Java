@@ -1,4 +1,4 @@
-package com.gallery.gallery.security.config;
+package com.gallery.gallery.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -19,7 +19,6 @@ import javax.annotation.Resource;
 
 @Configuration
 @EnableWebSecurity
-//@EnableGlobalMethodSecurity(securedEnabled = true)
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -46,26 +45,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new JwtAuthenticationFilter();
     }
 
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable().
                 authorizeRequests()
-                .antMatchers(HttpMethod.OPTIONS,"tags/create/*").permitAll()
-                .antMatchers("/login", "/register", "/images",
-                        "/tags", "tags/**", "/categories", "/categories/*", "/**").permitAll();
+                .antMatchers("/login", "/register", "/images", "/tags", "/categories, /**").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http
+                .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
     }
-//@Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http.cors().and().csrf().disable().
-//                authorizeRequests()
-//                .antMatchers("/login", "/register", "/images", "/tags", "/categories").permitAll()
-//                .anyRequest().authenticated()
-//                .and()
-//                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-//        http
-//                .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
-//    }
 
     @Bean
     public BCryptPasswordEncoder encoder(){

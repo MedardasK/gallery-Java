@@ -1,4 +1,4 @@
-package com.gallery.gallery.security.config;
+package com.gallery.gallery.config;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
