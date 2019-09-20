@@ -73,8 +73,6 @@ public class ImageService implements IImageService {
     public Image updateImage(Long id, ImageUpdate imageUpdate ) {
         Optional<Image> optionalImage = imageRep.findById(id);
         Image image = null;
-        System.out.println(optionalImage);
-        // exception optionalImage .ifPresent() -> lambda
         if (optionalImage != null){
             image = optionalImage.get();
 
@@ -104,7 +102,7 @@ public class ImageService implements IImageService {
         return (List<Image>) cb.and(predicates.toArray(new Predicate[predicates.size()]));
     }
 
-    public List<Image> getAllImagesBySearch(String searchString, List<Long> tagsIds, List<Long> categoriesIds) {
+    public List<Image> getAllImagesBySearch(String searchString, List<String> tagsArray, List<Long> categoriesIds) {
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Image> cq = cb.createQuery(Image.class);
@@ -125,11 +123,11 @@ public class ImageService implements IImageService {
             Predicate descriptionPredicate = cb.like(root.get("description"), "%" + searchString + "%");
             search = cb.or(namePredicate, descriptionPredicate);
         }
-        if (tagsIds.size() > 0) {
-            tagsSearch = cb.equal(tags.get("id"), tagsIds.get(0));
-            if (tagsIds.size() > 1) {
-                for (int i = 1; i < tagsIds.size(); i++) {
-                    Predicate currentPredicate = cb.equal(tags.get("id"), tagsIds.get(i));
+        if (tagsArray.size() > 0) {
+            tagsSearch = cb.equal(tags.get("name"), tagsArray.get(0));
+            if (tagsArray.size() > 1) {
+                for (int i = 1; i < tagsArray.size(); i++) {
+                    Predicate currentPredicate = cb.equal(tags.get("name"), tagsArray.get(i));
                     tagsSearch = cb.or(tagsSearch, currentPredicate);
                 }
             }

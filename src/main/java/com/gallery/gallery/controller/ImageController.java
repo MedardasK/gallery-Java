@@ -46,8 +46,8 @@ public class ImageController {
 
     @GetMapping("/search/{searchString}{tagsIds}{categoriesIds}")
     public List<Image> getAllImagesBySearch(@PathVariable(value = "searchString") String searchString,
-                                            @PathVariable(value = "tagsIds") List<Long> tagsIds,
+                                            @PathVariable(value = "tagsIds") List<String> tagsArray,
                                             @PathVariable(value = "categoriesIds") List<Long> categoriesIds) {
-        return imageService.getAllImagesBySearch(searchString, tagsIds, categoriesIds);
+        return imageService.getAllImagesBySearch(searchString, tagsArray, categoriesIds);
     }
 }
