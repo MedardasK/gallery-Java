@@ -12,7 +12,6 @@ import java.util.Set;
 @Data
 public class ImageUpdate {
 
-    private Long id;
     private String name;
     private String description;
     private String date = new SimpleDateFormat("yyyy.MM.dd").format(new Date());

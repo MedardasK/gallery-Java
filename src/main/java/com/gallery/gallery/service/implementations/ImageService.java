@@ -70,9 +70,10 @@ public class ImageService implements IImageService {
         imageRep.deleteById(imageId);
     }
 
-    public Image updateImage( ImageUpdate imageUpdate ) {
-        Optional<Image> optionalImage = imageRep.findById(imageUpdate.getId());
+    public Image updateImage(Long id, ImageUpdate imageUpdate ) {
+        Optional<Image> optionalImage = imageRep.findById(id);
         Image image = null;
+        System.out.println(optionalImage);
         // exception optionalImage .ifPresent() -> lambda
         if (optionalImage != null){
             image = optionalImage.get();
@@ -82,8 +83,10 @@ public class ImageService implements IImageService {
             image.setName(imageUpdate.getName());
             image.setDescription(imageUpdate.getDescription());
             image.setDate(imageUpdate.getDate());
+            return  imageRep.save(image);
+        } else {
+            return null;
         }
-        return  imageRep.save(image);
     };
 
     public List<Image> customFindByNameDes(String search) {

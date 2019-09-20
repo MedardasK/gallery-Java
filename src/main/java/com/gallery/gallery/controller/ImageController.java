@@ -6,9 +6,9 @@ import com.gallery.gallery.payload.ImageUpload;
 import com.gallery.gallery.service.IImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("images")
@@ -23,8 +23,8 @@ public class ImageController {
     }
 
     @GetMapping("/image/{id}")
-    public Image getImageById(@PathVariable(value = "id") Long fileId) {
-        return imageService.getImage(fileId);
+    public Image getImageById(@PathVariable(value = "id") Long id) {
+        return imageService.getImage(id);
     }
 
     @PostMapping("/upload")
@@ -32,17 +32,16 @@ public class ImageController {
         return imageService.saveImage(imageUpload);
     }
 
-
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteFile(@PathVariable(value = "id") Long id) {
         imageService.deleteImage(id);
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/update")
-    public Image updateImage(@ModelAttribute ImageUpdate imageUpdate) {
-        return imageService.updateImage(imageUpdate);
+    @PutMapping("/update/{id}")
+    public Image updateImage(@PathVariable(value = "id") Long id, @ModelAttribute ImageUpdate imageUpdate) {
+        return imageService.updateImage(id, imageUpdate);
     }
 
     @GetMapping("/search/{searchString}{tagsIds}{categoriesIds}")
