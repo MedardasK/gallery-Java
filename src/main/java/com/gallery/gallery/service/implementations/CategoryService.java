@@ -20,7 +20,7 @@ public class CategoryService implements ICategoryService {
     }
 
     public Category saveCategory(String name) {
-        if (name != null){
+        if (name != null && categoryRep.findByName(name) == null){
             Category category = new Category();
             category.setName(name);
             return categoryRep.save(category);

@@ -30,7 +30,7 @@ public class TagService implements ITagService {
     }
 
     public Tag saveTag(String name) {
-        if (name != null){
+        if (name != null && tagRepository.findByName(name) == null){
             Tag tag = new Tag();
             tag.setName(name);
             return tagRepository.save(tag);
