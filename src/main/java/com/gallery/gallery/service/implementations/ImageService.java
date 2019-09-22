@@ -23,6 +23,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.criteria.*;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ImageService implements IImageService {
@@ -32,26 +33,43 @@ public class ImageService implements IImageService {
     @Autowired
     private IImageRep imageRep;
     @Autowired
-    private ITagRep tagRepository;
+    private ITagRep tagRep;
     @Autowired
     private ICategoryRep categoryRep;
 
     public Image saveImage(ImageUpload imageUpload) {
+        String categoryString;
+        String tagString = null;
         MultipartFile file = imageUpload.getFile();
         String imageName = StringUtils.cleanPath(file.getOriginalFilename());
+
+
         try {
             if(imageName.contains("..")) {
                 throw new NotFoundException("Filename contains invalid path sequence " + imageName);
             }
             String imageString = imageName.substring(0, imageName.lastIndexOf("."));
 
+            categoryString = imageUpload.getCategories().substring(1, imageUpload.getCategories().length() - 1);
+            tagString = imageUpload.getTags().substring(1, imageUpload.getCategories().length() - 1);
+            List<Long> categoriesList = Arrays.stream(categoryString.split(","))
+                    .map(Long::valueOf).collect(Collectors.toList());
+            List<Long> tagsList = Arrays.stream(tagString.split(","))
+                    .map(Long::valueOf).collect(Collectors.toList());
+
+            Set<Category> categoriesObjects = categoryRep.findByIdIn(categoriesList);
+            Set<Tag> tagsObjects = tagRep.findByIdIn(tagsList);
+
             ResizedImage resizedImage = ImageResizeUtil.resize(file.getBytes());
 
             ImageFull full = new ImageFull();
             full.setData(file.getBytes());
+            Set<Category> categoryExample = new HashSet<>();
+            Set<Tag> tagExample = new HashSet<>();
+
             Image image = new Image(imageString, file.getContentType(), file.getSize(),
                     resizedImage.getData(), imageUpload.getDescription(), resizedImage.getHeight(),
-                    resizedImage.getWidth(), full, imageUpload.getCategories(), imageUpload.getTags());
+                    resizedImage.getWidth(), full, categoriesObjects, tagsObjects);
             return imageRep.save(image);
         } catch (IOException ex) {
             throw new FileStorageException("Could not store file " + imageName + ". Please try again!", ex);
@@ -63,7 +81,7 @@ public class ImageService implements IImageService {
     }
 
     public List<Image> getAllImages() {
-        return (List<Image>) imageRep.findAll();
+        return imageRep.findAll();
     }
 
     public void deleteImage(Long imageId) {

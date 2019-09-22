@@ -2,11 +2,21 @@ package com.gallery.gallery.DAO;
 
 import com.gallery.gallery.entity.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface ICategoryRep extends JpaRepository<Category, Long> {
 
-    Category findByName(String name);
+    @Query("select c from Category c where name = :name")
+    Category findByName(@Param("name") String name);
 
+    @Query("select c from Category c")
+    List<Category> findAll();
+
+    Set<Category> findByIdIn(List<Long> id);
 }

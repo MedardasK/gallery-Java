@@ -1,5 +1,6 @@
 package com.gallery.gallery.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -20,7 +21,8 @@ public class Tag {
     @Column(name = "NAME")
     private String name;
 
-    @ManyToMany(mappedBy = "tags")
+    @JsonIgnore
+    @ManyToMany(mappedBy = "tags", fetch = FetchType.LAZY)
     private Set<Image> files = new HashSet<>();
 
     public Tag() {
