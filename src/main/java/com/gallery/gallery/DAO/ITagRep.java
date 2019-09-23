@@ -12,11 +12,9 @@ import java.util.Set;
 @Repository
 public interface ITagRep extends JpaRepository<Tag, Long> {
 
-    @Query("select t from Tag t where name = :name")
-    Tag findByName(@Param("name") String name);
+    Tag findByName(String name);
 
-    @Query("select t from Tag t")
     List<Tag> findAll();
 
-    Set<Tag> findByIdIn(List<Long> id);
+    Set<Tag> findByIdIn(List<Long> tagsIdsList);
 }

@@ -38,11 +38,8 @@ public class ImageService implements IImageService {
     private ICategoryRep categoryRep;
 
     public Image saveImage(ImageUpload imageUpload) {
-        String categoryString;
-        String tagString = null;
         MultipartFile file = imageUpload.getFile();
         String imageName = StringUtils.cleanPath(file.getOriginalFilename());
-
 
         try {
             if(imageName.contains("..")) {
@@ -50,22 +47,17 @@ public class ImageService implements IImageService {
             }
             String imageString = imageName.substring(0, imageName.lastIndexOf("."));
 
-            categoryString = imageUpload.getCategories().substring(1, imageUpload.getCategories().length() - 1);
-            tagString = imageUpload.getTags().substring(1, imageUpload.getCategories().length() - 1);
-            List<Long> categoriesList = Arrays.stream(categoryString.split(","))
-                    .map(Long::valueOf).collect(Collectors.toList());
-            List<Long> tagsList = Arrays.stream(tagString.split(","))
-                    .map(Long::valueOf).collect(Collectors.toList());
-
-            Set<Category> categoriesObjects = categoryRep.findByIdIn(categoriesList);
-            Set<Tag> tagsObjects = tagRep.findByIdIn(tagsList);
+            Set<Category> categoriesObjects = categoryRep.findByIdIn(Arrays.stream(imageUpload.getCategories()
+                    .substring(1, imageUpload.getCategories().length() - 1).split(",")).map(Long::valueOf)
+                    .collect(Collectors.toList()));
+            Set<Tag> tagsObjects = tagRep.findByIdIn(Arrays.stream(imageUpload.getTags()
+                    .substring(1, imageUpload.getTags().length() - 1).split(",")).map(Long::valueOf)
+                    .collect(Collectors.toList()));
 
             ResizedImage resizedImage = ImageResizeUtil.resize(file.getBytes());
 
             ImageFull full = new ImageFull();
             full.setData(file.getBytes());
-            Set<Category> categoryExample = new HashSet<>();
-            Set<Tag> tagExample = new HashSet<>();
 
             Image image = new Image(imageString, file.getContentType(), file.getSize(),
                     resizedImage.getData(), imageUpload.getDescription(), resizedImage.getHeight(),
@@ -75,6 +67,7 @@ public class ImageService implements IImageService {
             throw new FileStorageException("Could not store file " + imageName + ". Please try again!", ex);
         }
     }
+
     public Image getImage(Long imageId) {
         return imageRep.findById(imageId)
                 .orElseThrow(() -> new NotFoundException("File not found with id " + imageId));

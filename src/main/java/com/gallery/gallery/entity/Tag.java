@@ -1,13 +1,14 @@
 package com.gallery.gallery.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-@Data
+@Setter
 @Entity
 @Table(name = "TAG")
 public class Tag {
@@ -21,11 +22,28 @@ public class Tag {
     @Column(name = "NAME")
     private String name;
 
-    @JsonIgnore
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
     @ManyToMany(mappedBy = "tags", fetch = FetchType.LAZY)
     private Set<Image> files = new HashSet<>();
 
+    @JsonBackReference
+    public Set<Image> getFiles() {
+        return files;
+    }
+
     public Tag() {
+    }
+
+    public Tag(String name) {
+        this.name = name;
     }
 
 }

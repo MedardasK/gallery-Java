@@ -12,11 +12,9 @@ import java.util.Set;
 @Repository
 public interface ICategoryRep extends JpaRepository<Category, Long> {
 
-    @Query("select c from Category c where name = :name")
-    Category findByName(@Param("name") String name);
+    Category findByName(String name);
 
-    @Query("select c from Category c")
     List<Category> findAll();
 
-    Set<Category> findByIdIn(List<Long> id);
+    Set<Category> findByIdIn(List<Long> categoriesIdsList);
 }

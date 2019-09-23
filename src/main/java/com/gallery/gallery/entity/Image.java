@@ -1,6 +1,8 @@
 package com.gallery.gallery.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.NonNull;
 
@@ -22,6 +24,7 @@ public class Image {
     @Column(name = "ID",unique=true, nullable = false)
     private Long id;
 
+    @Lob
     @NonNull
     @Column(name = "DATA")
     private byte[] data;
@@ -47,24 +50,25 @@ public class Image {
     @Column(name = "DATE")
     private String date = new SimpleDateFormat("yyyy.MM.dd").format(new Date());
 
+    @JsonManagedReference
     @ManyToMany(cascade = {
             CascadeType.PERSIST,
             CascadeType.MERGE})
     @JoinTable(name = "IMAGE_TAG",
             joinColumns = @JoinColumn(name = "ID"),
             inverseJoinColumns = @JoinColumn(name = "TAG_ID"))
-    @JsonBackReference
     private Set<Tag> tags = new HashSet<>();
 
+    @JsonManagedReference
     @ManyToMany(cascade = {
             CascadeType.PERSIST,
             CascadeType.MERGE})
     @JoinTable(name = "IMAGE_CATEGORY",
             joinColumns = @JoinColumn(name = "ID"),
             inverseJoinColumns = @JoinColumn(name = "CATEGORY_ID"))
-    @JsonBackReference
     private Set<Category> categories = new HashSet<>();
 
+    @JsonIgnore
     @JoinColumn(name = "IMAGE_FULL_ID")
     @OneToOne(cascade = CascadeType.ALL)
     private ImageFull imageFull;
