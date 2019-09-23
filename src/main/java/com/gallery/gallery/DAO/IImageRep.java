@@ -9,7 +9,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface IImageRep extends JpaRepository<Image, Long> {
 
-    @Query("select i from Image i inner join i.imageFull where i.id = :id")
-    Image findByIdCustom(@Param("id") Long id);
-
 }

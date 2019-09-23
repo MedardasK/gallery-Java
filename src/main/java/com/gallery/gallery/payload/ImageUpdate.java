@@ -15,6 +15,6 @@ public class ImageUpdate {
     private String name;
     private String description;
     private String date = new SimpleDateFormat("yyyy.MM.dd").format(new Date());
-    private Set<Tag> tags = new HashSet<>();
-    private Set<Category> categories = new HashSet<>();
+    private String tags;
+    private String categories;
 }

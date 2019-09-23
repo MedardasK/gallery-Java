@@ -47,12 +47,8 @@ public class ImageService implements IImageService {
             }
             String imageString = imageName.substring(0, imageName.lastIndexOf("."));
 
-            Set<Category> categoriesObjects = categoryRep.findByIdIn(Arrays.stream(imageUpload.getCategories()
-                    .substring(1, imageUpload.getCategories().length() - 1).split(",")).map(Long::valueOf)
-                    .collect(Collectors.toList()));
-            Set<Tag> tagsObjects = tagRep.findByIdIn(Arrays.stream(imageUpload.getTags()
-                    .substring(1, imageUpload.getTags().length() - 1).split(",")).map(Long::valueOf)
-                    .collect(Collectors.toList()));
+            Set<Category> categoriesSet = categoryRep.findByIdIn(extractIds(imageUpload.getCategories()));
+            Set<Tag> tagsSet = tagRep.findByIdIn(extractIds(imageUpload.getTags()));
 
             ResizedImage resizedImage = ImageResizeUtil.resize(file.getBytes());
 
@@ -61,7 +57,7 @@ public class ImageService implements IImageService {
 
             Image image = new Image(imageString, file.getContentType(), file.getSize(),
                     resizedImage.getData(), imageUpload.getDescription(), resizedImage.getHeight(),
-                    resizedImage.getWidth(), full, categoriesObjects, tagsObjects);
+                    resizedImage.getWidth(), full, categoriesSet, tagsSet);
             return imageRep.save(image);
         } catch (IOException ex) {
             throw new FileStorageException("Could not store file " + imageName + ". Please try again!", ex);
@@ -86,9 +82,14 @@ public class ImageService implements IImageService {
         Image image = null;
         if (optionalImage != null){
             image = optionalImage.get();
+            String asd = imageUpdate.getCategories();
+            List<Long> dfd = extractIds(imageUpdate.getCategories());
 
-            image.setCategories(imageUpdate.getCategories());
-            image.setTags(imageUpdate.getTags());
+            Set<Category> categoriesSet = categoryRep.findByIdIn(extractIds(imageUpdate.getCategories()));
+            Set<Tag> tagsSet = tagRep.findByIdIn(extractIds(imageUpdate.getTags()));
+
+            image.setCategories(categoriesSet);
+            image.setTags(tagsSet);
             image.setName(imageUpdate.getName());
             image.setDescription(imageUpdate.getDescription());
             image.setDate(imageUpdate.getDate());
@@ -97,6 +98,11 @@ public class ImageService implements IImageService {
             return null;
         }
     };
+
+    private List<Long> extractIds(String value){
+        return Arrays.stream(value.substring(1, value.length() - 1).split(","))
+                .map(Long::valueOf).collect(Collectors.toList());
+    }
 
     public List<Image> customFindByNameDes(String search) {
         CriteriaBuilder cb = em.getCriteriaBuilder();

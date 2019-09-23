@@ -68,7 +68,7 @@ public class Image {
             inverseJoinColumns = @JoinColumn(name = "CATEGORY_ID"))
     private Set<Category> categories = new HashSet<>();
 
-    @JsonIgnore
+    @JsonManagedReference
     @JoinColumn(name = "IMAGE_FULL_ID")
     @OneToOne(cascade = CascadeType.ALL)
     private ImageFull imageFull;
