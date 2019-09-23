@@ -45,19 +45,23 @@ public class ImageService implements IImageService {
             if(imageName.contains("..")) {
                 throw new NotFoundException("Filename contains invalid path sequence " + imageName);
             }
+            Image image = new Image();
             String imageString = imageName.substring(0, imageName.lastIndexOf("."));
-
-            Set<Category> categoriesSet = categoryRep.findByIdIn(extractIds(imageUpload.getCategories()));
-            Set<Tag> tagsSet = tagRep.findByIdIn(extractIds(imageUpload.getTags()));
-
             ResizedImage resizedImage = ImageResizeUtil.resize(file.getBytes());
+            ImageFull imageFull = new ImageFull();
+            imageFull.setData(file.getBytes());
 
-            ImageFull full = new ImageFull();
-            full.setData(file.getBytes());
+            image.setName(imageString);
+            image.setType(file.getContentType());
+            image.setSize(file.getSize());
+            image.setData(resizedImage.getData());
+            image.setDescription(imageUpload.getDescription());
+            image.setHeight(resizedImage.getHeight());
+            image.setWidth(resizedImage.getWidth());
+            image.setImageFull(imageFull);
+            image.setCategories(categoryRep.findByIdIn(extractIds(imageUpload.getCategories())));
+            image.setTags(tagRep.findByIdIn(extractIds(imageUpload.getTags())));
 
-            Image image = new Image(imageString, file.getContentType(), file.getSize(),
-                    resizedImage.getData(), imageUpload.getDescription(), resizedImage.getHeight(),
-                    resizedImage.getWidth(), full, categoriesSet, tagsSet);
             return imageRep.save(image);
         } catch (IOException ex) {
             throw new FileStorageException("Could not store file " + imageName + ". Please try again!", ex);
@@ -82,14 +86,8 @@ public class ImageService implements IImageService {
         Image image = null;
         if (optionalImage != null){
             image = optionalImage.get();
-            String asd = imageUpdate.getCategories();
-            List<Long> dfd = extractIds(imageUpdate.getCategories());
-
-            Set<Category> categoriesSet = categoryRep.findByIdIn(extractIds(imageUpdate.getCategories()));
-            Set<Tag> tagsSet = tagRep.findByIdIn(extractIds(imageUpdate.getTags()));
-
-            image.setCategories(categoriesSet);
-            image.setTags(tagsSet);
+            image.setCategories(categoryRep.findByIdIn(extractIds(imageUpdate.getCategories())));
+            image.setTags(tagRep.findByIdIn(extractIds(imageUpdate.getTags())));
             image.setName(imageUpdate.getName());
             image.setDescription(imageUpdate.getDescription());
             image.setDate(imageUpdate.getDate());
@@ -119,63 +117,74 @@ public class ImageService implements IImageService {
         return (List<Image>) cb.and(predicates.toArray(new Predicate[predicates.size()]));
     }
 
-    public List<Image> getAllImagesBySearch(String searchString, List<String> tagsArray, List<Long> categoriesIds) {
+    public List<Image> getAllImagesBySearch(String searchParams) {
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Image> cq = cb.createQuery(Image.class);
         Root<Image> root = cq.from(Image.class);
+
+
+        // taisyti
+        String searchString = "";
+//                searchParams.getSearchString();
+
+        List<String> tagsArray = new ArrayList<>();
+//        tagsArray.add(searchParams.getTagsArray());
+        List<Long> categoriesIds = new ArrayList<>();
+//                extractIds(searchParams.getCategoriesIds());
+
 
         Join<Image, Tag> tags = root.join("tags", JoinType.LEFT);
         Join<Image, Category> categories = root.join("categories", JoinType.LEFT);
         cq.select(root);
 
         Predicate predicate = null;
-        Predicate search = null;
-        Predicate tagsSearch = null;
-        Predicate categoriesSearch = null;
+        Predicate searchPredicate = null;
+        Predicate tagsSearchPredicate = null;
+        Predicate categoriesSearchPredicate = null;
 
 
         if (!searchString.isEmpty()) {
             Predicate namePredicate = cb.like(root.get("name"), "%" + searchString + "%");
             Predicate descriptionPredicate = cb.like(root.get("description"), "%" + searchString + "%");
-            search = cb.or(namePredicate, descriptionPredicate);
+            searchPredicate = cb.or(namePredicate, descriptionPredicate);
         }
         if (tagsArray.size() > 0) {
-            tagsSearch = cb.equal(tags.get("name"), tagsArray.get(0));
+            tagsSearchPredicate = cb.equal(tags.get("name"), tagsArray.get(0));
             if (tagsArray.size() > 1) {
                 for (int i = 1; i < tagsArray.size(); i++) {
                     Predicate currentPredicate = cb.equal(tags.get("name"), tagsArray.get(i));
-                    tagsSearch = cb.or(tagsSearch, currentPredicate);
+                    tagsSearchPredicate = cb.or(tagsSearchPredicate, currentPredicate);
                 }
             }
         }
         if (categoriesIds.size() > 0) {
-            categoriesSearch = cb.equal(categories.get("id"), categoriesIds.get(0));
+            categoriesSearchPredicate = cb.equal(categories.get("id"), categoriesIds.get(0));
             if (categoriesIds.size() > 1) {
                 for (int i = 1; i < categoriesIds.size(); i++) {
                     Predicate currentPredicate = cb.equal(categories.get("id"), categoriesIds.get(i));
-                    categoriesSearch = cb.or(categoriesSearch, currentPredicate);
+                    categoriesSearchPredicate = cb.or(categoriesSearchPredicate, currentPredicate);
                 }
             }
         }
 
-        if (search != null) {
-            predicate = search;
+        if (searchPredicate != null) {
+            predicate = searchPredicate;
         }
 
-        if (tagsSearch != null) {
+        if (tagsSearchPredicate != null) {
             if (predicate != null) {
-                predicate = cb.and(predicate, tagsSearch);
+                predicate = cb.and(predicate, tagsSearchPredicate);
             } else {
-                predicate = tagsSearch;
+                predicate = tagsSearchPredicate;
             }
         }
 
-        if (categoriesSearch != null) {
+        if (categoriesSearchPredicate != null) {
             if (predicate != null) {
-                predicate = cb.and(predicate, categoriesSearch);
+                predicate = cb.and(predicate, categoriesSearchPredicate);
             } else {
-                predicate = categoriesSearch;
+                predicate = categoriesSearchPredicate;
             }
         }
 

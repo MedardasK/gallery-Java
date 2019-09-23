@@ -16,7 +16,7 @@ public interface IImageService {
 
     void deleteImage(Long fileId);
 
-    List<Image> getAllImagesBySearch(String searchString, List<String> tagsArray, List<Long> categoriesIds);
+    List<Image> getAllImagesBySearch(String searchString);
 
     Image updateImage(Long id, ImageUpdate imageUpdate);
 }
