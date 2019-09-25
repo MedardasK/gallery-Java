@@ -15,27 +15,39 @@ public class UserController {
     @Autowired
     private IUserService IUserService;
 
+    @PostMapping("/register")
+    public User create(@RequestBody User user){
+        if (user.getUsername() == null || user.getPassword() == null) {
+            return null;
+        } else {
+            return IUserService.save(user);
+        }
+    }
+
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping()
     public List listUser(){
         return IUserService.findAll();
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/user/{id}")
     public User getOne(@PathVariable(value = "id") Long id){
-        return IUserService.findById(id);
-    }
-
-    @PostMapping("/register")
-    public User create(@RequestBody User user){
-        return IUserService.save(user);
+        if (id < 0) {
+            return null;
+        } else {
+            return IUserService.findById(id);
+        }
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/user/{id}")
-    public void deleteUser(@PathVariable(value = "id") Long id){
-        IUserService.delete(id);
+    public String deleteUser(@PathVariable(value = "id") Long id){
+        if (id < 0) {
+            return null;
+        } else {
+            return IUserService.delete(id);
+        }
     }
 
 }

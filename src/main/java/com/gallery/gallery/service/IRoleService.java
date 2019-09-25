@@ -4,6 +4,6 @@ import com.gallery.gallery.entity.Role;
 
 public interface IRoleService {
 
-
     Role findByRoleName(String name);
+
 }

@@ -40,12 +40,12 @@ public class ImageService implements IImageService {
     public Image saveImage(ImageUpload imageUpload) {
         MultipartFile file = imageUpload.getFile();
         String imageName = StringUtils.cleanPath(file.getOriginalFilename());
+        Image image = new Image();
 
         try {
             if(imageName.contains("..")) {
                 throw new NotFoundException("Filename contains invalid path sequence " + imageName);
             }
-            Image image = new Image();
             String imageString = imageName.substring(0, imageName.lastIndexOf("."));
             ResizedImage resizedImage = ImageResizeUtil.resize(file.getBytes());
             ImageFull imageFull = new ImageFull();
@@ -63,14 +63,27 @@ public class ImageService implements IImageService {
             image.setTags(tagRep.findByIdIn(extractIds(imageUpload.getTags())));
 
             return imageRep.save(image);
-        } catch (IOException ex) {
-            throw new FileStorageException("Could not store file " + imageName + ". Please try again!", ex);
+        } catch (Exception exception) {
+            return null;
+            //throw new FileStorageException("Could not upload image " + imageName + ". Please try again!", ex);
         }
     }
 
     public Image getImage(Long imageId) {
-        return imageRep.findById(imageId)
-                .orElseThrow(() -> new NotFoundException("File not found with id " + imageId));
+            Optional<Image> imageOptional = imageRep.findById(imageId);
+            if(imageOptional.isPresent()){
+                return (Image) imageOptional.get();
+            }
+            else{
+                return null;
+               // return new (Image) dto {sucees = false}
+            }
+//        }
+//        catch (Exception exc) {
+//            throw new NotFoundException("Image not found with id " + imageId);
+//        }
+//        return imageRep.findById(imageId)
+//                .orElseThrow(() -> new NotFoundException("Image not found with id " + imageId));
     }
 
     public List<Image> getAllImages() {
@@ -78,12 +91,20 @@ public class ImageService implements IImageService {
     }
 
     public void deleteImage(Long imageId) {
-        imageRep.deleteById(imageId);
+
+        try {
+            imageRep.deleteById(imageId);
+        }
+        catch (Exception err) {
+
+        }
+
     }
 
     public Image updateImage(Long id, ImageUpdate imageUpdate ) {
         Optional<Image> optionalImage = imageRep.findById(id);
-        Image image = null;
+        Image image;
+
         if (optionalImage != null){
             image = optionalImage.get();
             image.setCategories(categoryRep.findByIdIn(extractIds(imageUpdate.getCategories())));
@@ -96,11 +117,6 @@ public class ImageService implements IImageService {
             return null;
         }
     };
-
-    private List<Long> extractIds(String value){
-        return Arrays.stream(value.substring(1, value.length() - 1).split(","))
-                .map(Long::valueOf).collect(Collectors.toList());
-    }
 
     public List<Image> customFindByNameDes(String search) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -195,9 +211,14 @@ public class ImageService implements IImageService {
                     new HashSet<>(em.createQuery(cq).getResultList()));
             return filteredImages;
         } else {
-            return null;
+            return imageRep.findAll();
         }
 
+    }
+
+    private List<Long> extractIds(String value){
+        return Arrays.stream(value.substring(1, value.length() - 1).split(","))
+                .map(Long::valueOf).collect(Collectors.toList());
     }
 
 }

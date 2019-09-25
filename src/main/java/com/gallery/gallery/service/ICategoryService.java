@@ -10,5 +10,6 @@ public interface ICategoryService {
 
     Category saveCategory(String name);
 
-    void deleteCategory(Long id);
+    String deleteCategory(Long id);
+
 }

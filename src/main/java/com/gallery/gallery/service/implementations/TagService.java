@@ -25,12 +25,18 @@ public class TagService implements ITagService {
                 .orElseThrow(() -> new NotFoundException("Tag not found with id " + tagId));
     }
 
-    public void deleteTag(Long tagId) {
-        tagRepository.deleteById(tagId);
+    public String deleteTag(Long tagId) {
+        try {
+            tagRepository.deleteById(tagId);
+            return "Success";
+        } catch (Exception exception) {
+
+            return "Failed";
+        }
     }
 
     public Tag saveTag(String name) {
-        if (name != null && tagRepository.findByName(name) == null){
+        if (tagRepository.findByName(name) == null){
             Tag tag = new Tag();
             tag.setName(name);
             return tagRepository.save(tag);

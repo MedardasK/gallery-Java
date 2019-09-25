@@ -5,6 +5,7 @@ import com.gallery.gallery.payload.ImageUpdate;
 import com.gallery.gallery.payload.ImageUpload;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IImageService {
 
@@ -19,4 +20,5 @@ public interface IImageService {
     List<Image> getAllImagesBySearch(String searchString);
 
     Image updateImage(Long id, ImageUpdate imageUpdate);
+
 }

@@ -1,7 +1,6 @@
 package com.gallery.gallery.service.implementations;
 
 import com.gallery.gallery.DAO.ICategoryRep;
-import com.gallery.gallery.DAO.IImageRep;
 import com.gallery.gallery.entity.Category;
 import com.gallery.gallery.service.ICategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,7 @@ public class CategoryService implements ICategoryService {
     }
 
     public Category saveCategory(String name) {
-        if (name != null && categoryRep.findByName(name) == null){
+        if (categoryRep.findByName(name) == null){
             Category category = new Category();
             category.setName(name);
             return categoryRep.save(category);
@@ -29,7 +28,13 @@ public class CategoryService implements ICategoryService {
         }
     }
 
-    public void deleteCategory(Long tagId) {
-        categoryRep.deleteById(tagId);
+    public String deleteCategory(Long tagId) {
+        try {
+            categoryRep.deleteById(tagId);
+            return "Success";
+        } catch (Exception exception) {
+
+            return "Failed";
+        }
     }
 }

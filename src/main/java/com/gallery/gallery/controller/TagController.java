@@ -14,29 +14,37 @@ public class TagController {
     @Autowired
     private ITagService tagService;
 
-    // Get All Tags
     @GetMapping()
     public List<Tag> getAllTags() {
         return tagService.getAllTags();
     }
 
-    // Create a new Tag
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PostMapping("/create")
     public Tag saveTag(@RequestBody String name) {
-        return tagService.saveTag(name);
+        if (name == null) {
+            return null;
+        } else {
+            return tagService.saveTag(name);
+        }
     }
 
-    // Get a Single Tag
     @GetMapping("/tag/{id}")
-    public Tag getTagById(@PathVariable(value = "id") Long tagId) {
-        return tagService.getTagById(tagId);
+    public Tag getTagById(@PathVariable(value = "id") Long id) {
+        if (id < 0) {
+            return null;
+        } else {
+            return tagService.getTagById(id);
+        }
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete/{id}")
-    public void deleteTag(@PathVariable("id") Long id){
-        tagService.deleteTag(id);
+    public String deleteTag(@PathVariable("id") Long id){
+        if (id < 0) {
+            return null;
+        } else {
+            return tagService.deleteTag(id);
+        }
     }
-
-
 }

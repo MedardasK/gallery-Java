@@ -54,13 +54,14 @@ public class UserService implements UserDetailsService, IUserService {
     }
 
     @Override
-    public void delete(Long id) {
-        userRepository.deleteById(id);
-    }
+    public String delete(Long id) {
+        try {
+            userRepository.deleteById(id);
+            return "Success";
+        } catch (Exception exception){
+            return "Failed";
+        }
 
-    @Override
-    public User findOne(String username) {
-        return userRepository.findByUsername(username);
     }
 
     @Override
@@ -71,7 +72,7 @@ public class UserService implements UserDetailsService, IUserService {
     @Override
     public User save(User user) {
 
-        if (userRepository.findByUsername(user.getUsername()) == null || user.getUsername() != null){
+        if (userRepository.findByUsername(user.getUsername()) == null){
             User newUser = new User();
             newUser.setUsername(user.getUsername());
             newUser.setPassword(bcryptEncoder.encode(user.getPassword()));

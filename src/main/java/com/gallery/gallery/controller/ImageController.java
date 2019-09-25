@@ -24,24 +24,44 @@ public class ImageController {
 
     @GetMapping("/image/{id}")
     public Image getImageById(@PathVariable(value = "id") Long id) {
-        return imageService.getImage(id);
+        if (id < 0) {
+            return null; // error string
+        } else {
+            return imageService.getImage(id);
+        }
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PostMapping("/upload")
     public Image uploadFile(@ModelAttribute ImageUpload imageUpload) {
-        return imageService.saveImage(imageUpload);
+        if (imageUpload.getFile() == null || imageUpload.getCategories() == null || imageUpload.getTags() == null
+        || imageUpload.getDescription() == null){
+            return null; // error string
+        } else {
+            return imageService.saveImage(imageUpload);
+        }
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @PutMapping("/update/{id}")
+    public Image updateImage(@PathVariable(value = "id") Long id, @ModelAttribute ImageUpdate imageUpdate) {
+        if (id < 0 || imageUpdate.getCategories() == null || imageUpdate.getTags() == null
+                || imageUpdate.getDescription() == null || imageUpdate.getName() == null){
+            return null; // error string
+        } else {
+            return imageService.updateImage(id, imageUpdate);
+        }
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteFile(@PathVariable(value = "id") Long id) {
-        imageService.deleteImage(id);
-        return ResponseEntity.ok().build();
-    }
-
-    @PutMapping("/update/{id}")
-    public Image updateImage(@PathVariable(value = "id") Long id, @ModelAttribute ImageUpdate imageUpdate) {
-        return imageService.updateImage(id, imageUpdate);
+        if (id < 0) {
+            return null; // error string
+        } else {
+            imageService.deleteImage(id);
+            return ResponseEntity.ok().build();
+        }
     }
 
     @GetMapping("/search/{searchParams}")

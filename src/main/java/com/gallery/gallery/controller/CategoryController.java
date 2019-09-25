@@ -20,15 +20,24 @@ public class CategoryController {
         return categoryService.findAllCategories();
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PostMapping("/create")
     public Category createCategory(@RequestBody String name) {
-        return categoryService.saveCategory(name);
+        if (name == null) {
+            return null;
+        } else {
+            return categoryService.saveCategory(name);
+        }
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete/{id}")
-    public void deleteCategory(@PathVariable("id") Long id){
-        categoryService.deleteCategory(id);
+    public String deleteCategory(@PathVariable("id") Long id){
+        if (id < 0) {
+            return null;
+        } else {
+            return categoryService.deleteCategory(id);
+        }
     }
 
 }
