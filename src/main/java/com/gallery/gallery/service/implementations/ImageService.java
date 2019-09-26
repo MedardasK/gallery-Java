@@ -64,6 +64,11 @@ public class ImageService implements IImageService {
 
             return imageRep.save(image);
         } catch (Exception exception) {
+            // @Log
+//            Creates private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(LogExample.class.getName());
+//            log.info("An INFO Message");
+//            log.severe("An ERROR Message");
+//            log.warning("A WARN Message");
             return null;
             //throw new FileStorageException("Could not upload image " + imageName + ". Please try again!", ex);
         }
