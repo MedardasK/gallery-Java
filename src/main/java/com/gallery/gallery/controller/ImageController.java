@@ -64,8 +64,12 @@ public class ImageController {
         }
     }
 
-    @GetMapping("/search/{searchParams}")
-    public List<Image> getAllImagesBySearch(@PathVariable(value = "searchParams") String searchParams) {
-        return imageService.getAllImagesBySearch(searchParams);
+    @GetMapping("/search/")
+    public List<Image> getAllImagesBySearch(@RequestParam String searchParams) {
+        if (searchParams.isEmpty() || searchParams == null) {
+            return null; // error string
+        } else {
+            return imageService.getAllImagesBySearch(searchParams);
+        }
     }
 }

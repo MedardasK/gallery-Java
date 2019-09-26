@@ -72,7 +72,7 @@ public class UserService implements UserDetailsService, IUserService {
     @Override
     public User save(User user) {
 
-        if (userRepository.findByUsername(user.getUsername()) == null){
+        if (userRepository.findByUsername(user.getUsername().toLowerCase()) == null){
             User newUser = new User();
             newUser.setUsername(user.getUsername());
             newUser.setPassword(bcryptEncoder.encode(user.getPassword()));

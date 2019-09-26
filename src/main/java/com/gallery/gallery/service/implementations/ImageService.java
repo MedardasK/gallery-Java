@@ -83,12 +83,6 @@ public class ImageService implements IImageService {
                 return null;
                // return new (Image) dto {sucees = false}
             }
-//        }
-//        catch (Exception exc) {
-//            throw new NotFoundException("Image not found with id " + imageId);
-//        }
-//        return imageRep.findById(imageId)
-//                .orElseThrow(() -> new NotFoundException("Image not found with id " + imageId));
     }
 
     public List<Image> getAllImages() {
@@ -144,16 +138,14 @@ public class ImageService implements IImageService {
         CriteriaQuery<Image> cq = cb.createQuery(Image.class);
         Root<Image> root = cq.from(Image.class);
 
-
-        // taisyti
-        String searchString = "";
-//                searchParams.getSearchString();
-
+        List<Long> categoriesIds = extractIds(searchParams.substring(13, searchParams.indexOf("tagsNames:") + 1));
+        String tagsString = searchParams.substring(
+                searchParams.indexOf("tagsNames:") + 10, searchParams.indexOf("searchString:"));
         List<String> tagsArray = new ArrayList<>();
-//        tagsArray.add(searchParams.getTagsArray());
-        List<Long> categoriesIds = new ArrayList<>();
-//                extractIds(searchParams.getCategoriesIds());
-
+        if (!tagsString.isEmpty()) {
+            tagsArray = Arrays.asList(tagsString.split(","));
+        }
+        String searchString = searchParams.substring(searchParams.indexOf("searchString:") + 13);
 
         Join<Image, Tag> tags = root.join("tags", JoinType.LEFT);
         Join<Image, Category> categories = root.join("categories", JoinType.LEFT);
@@ -163,7 +155,6 @@ public class ImageService implements IImageService {
         Predicate searchPredicate = null;
         Predicate tagsSearchPredicate = null;
         Predicate categoriesSearchPredicate = null;
-
 
         if (!searchString.isEmpty()) {
             Predicate namePredicate = cb.like(root.get("name"), "%" + searchString + "%");
@@ -222,8 +213,12 @@ public class ImageService implements IImageService {
     }
 
     private List<Long> extractIds(String value){
-        return Arrays.stream(value.substring(1, value.length() - 1).split(","))
-                .map(Long::valueOf).collect(Collectors.toList());
+        if (value == null || value.isEmpty() || value.substring(1, value.length() - 1).isEmpty()){
+            return Collections.emptyList();
+        } else {
+            return Arrays.stream(value.substring(1, value.length() - 1).split(","))
+                    .map(Long::valueOf).collect(Collectors.toList());
+        }
     }
 
 }

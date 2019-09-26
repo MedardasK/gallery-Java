@@ -45,12 +45,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new JwtAuthenticationFilter();
     }
 
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable().
                 authorizeRequests()
-                .antMatchers("/login", "/register", "/images", "/tags", "/categories, /**").permitAll()
+                .antMatchers("/login", "/register").permitAll()
+                .antMatchers("/images", "/images/search/", "/images/image/*").permitAll()
+                .antMatchers("/tags", "/categories").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
