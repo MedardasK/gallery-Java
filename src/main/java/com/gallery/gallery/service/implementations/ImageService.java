@@ -89,13 +89,14 @@ public class ImageService implements IImageService {
         return imageRep.findAll();
     }
 
-    public void deleteImage(Long imageId) {
+    public String deleteImage(Long imageId) {
 
         try {
             imageRep.deleteById(imageId);
+            return "Success";
         }
         catch (Exception err) {
-
+            return err.toString();
         }
 
     }
@@ -133,23 +134,22 @@ public class ImageService implements IImageService {
     }
 
     public List<Image> getAllImagesBySearch(String searchParams) {
-
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Image> cq = cb.createQuery(Image.class);
         Root<Image> root = cq.from(Image.class);
+        Join<Image, Tag> tags = root.join("tags", JoinType.LEFT);
+        Join<Image, Category> categories = root.join("categories", JoinType.LEFT);
+        cq.select(root);
 
         List<Long> categoriesIds = extractIds(searchParams.substring(13, searchParams.indexOf("tagsNames:") + 1));
         String tagsString = searchParams.substring(
                 searchParams.indexOf("tagsNames:") + 10, searchParams.indexOf("searchString:"));
         List<String> tagsArray = new ArrayList<>();
+
         if (!tagsString.isEmpty()) {
             tagsArray = Arrays.asList(tagsString.split(","));
         }
         String searchString = searchParams.substring(searchParams.indexOf("searchString:") + 13);
-
-        Join<Image, Tag> tags = root.join("tags", JoinType.LEFT);
-        Join<Image, Category> categories = root.join("categories", JoinType.LEFT);
-        cq.select(root);
 
         Predicate predicate = null;
         Predicate searchPredicate = null;
