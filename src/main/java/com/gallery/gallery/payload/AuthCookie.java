@@ -5,10 +5,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class ResizedImage {
-
-    private byte[] data;
-    private Integer width;
-    private Integer height;
-
+public class AuthCookie {
+    String cookie;
+    String username;
 }

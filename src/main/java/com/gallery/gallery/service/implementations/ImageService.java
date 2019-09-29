@@ -62,24 +62,17 @@ public class ImageService implements IImageService {
 
             return imageRep.save(image);
         } catch (Exception exception) {
-            // @Log
-//            Creates private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(LogExample.class.getName());
-//            log.info("An INFO Message");
-//            log.severe("An ERROR Message");
-//            log.warning("A WARN Message");
             return null;
-            //throw new FileStorageException("Could not upload image " + imageName + ". Please try again!", ex);
         }
     }
 
     public Image getImage(Long imageId) {
             Optional<Image> imageOptional = imageRep.findById(imageId);
             if(imageOptional.isPresent()){
-                return (Image) imageOptional.get();
+                return imageOptional.get();
             }
             else{
                 return null;
-               // return new (Image) dto {sucees = false}
             }
     }
 
@@ -96,7 +89,6 @@ public class ImageService implements IImageService {
         catch (Exception err) {
             return err.toString();
         }
-
     }
 
     public Image updateImage(Long id, ImageUpdate imageUpdate ) {
@@ -114,7 +106,7 @@ public class ImageService implements IImageService {
         } else {
             return null;
         }
-    };
+    }
 
     public List<Image> customFindByNameDes(String search) {
         CriteriaBuilder cb = em.getCriteriaBuilder();

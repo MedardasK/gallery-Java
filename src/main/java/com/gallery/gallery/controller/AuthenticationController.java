@@ -2,6 +2,7 @@ package com.gallery.gallery.controller;
 
 
 import com.gallery.gallery.entity.User;
+import com.gallery.gallery.payload.AuthCookie;
 import com.gallery.gallery.service.IAuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,11 @@ public class AuthenticationController {
 
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/refresh-token")
-    public ResponseEntity<?> refreshToken() throws AuthenticationException {
-            return ResponseEntity.ok(authenticationService.refreshToken());
+    public ResponseEntity<?> refreshToken(@RequestBody AuthCookie authCookie) throws AuthenticationException {
+        if (authCookie.getCookie() != null && authCookie.getUsername() != null){
+            return ResponseEntity.ok(authenticationService.refreshToken(authCookie));
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
