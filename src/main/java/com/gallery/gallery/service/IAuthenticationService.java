@@ -6,4 +6,6 @@ import com.gallery.gallery.payload.AuthToken;
 public interface IAuthenticationService {
 
     AuthToken loginUser(User loginUser);
+
+    AuthToken refreshToken();
 }

@@ -32,4 +32,13 @@ public class AuthenticationService implements IAuthenticationService {
         return new AuthToken(token);
     }
 
+    public AuthToken refreshToken() {
+        if (jwtTokenUtil.validateToken()) {
+
+        final String token = jwtTokenUtil.generateToken(authentication);
+        return new AuthToken(token);
+        } else {
+        return null;
+    }
+
 }
