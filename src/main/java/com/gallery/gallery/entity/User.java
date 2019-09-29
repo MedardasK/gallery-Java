@@ -1,6 +1,7 @@
 package com.gallery.gallery.entity;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -20,7 +21,6 @@ public class User {
     @Column(unique=true, nullable = false)
     private String username;
 
-    @Column
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

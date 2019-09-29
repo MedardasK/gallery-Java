@@ -1,6 +1,7 @@
 package com.gallery.gallery.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -8,6 +9,7 @@ import java.util.Collection;
 
 
 @Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "ROLE")
 public class Role {
@@ -18,7 +20,6 @@ public class Role {
     @Column(name = "ROLE_ID",unique=true, nullable = false)
     private Long id;
 
-    @Column
     private String name;
 
     @ManyToMany(mappedBy = "roles")
@@ -37,10 +38,4 @@ public class Role {
         return users;
     }
 
-    public Role() {
-    }
-
-    public Role(Collection<User> users) {
-        this.users = users;
-    }
 }

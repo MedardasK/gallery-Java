@@ -3,6 +3,7 @@ package com.gallery.gallery.controller;
 import com.gallery.gallery.entity.Tag;
 import com.gallery.gallery.service.ITagService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -21,30 +22,30 @@ public class TagController {
 
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PostMapping("/create")
-    public Tag saveTag(@RequestBody String name) {
-        if (name == null) {
-            return null;
+    public ResponseEntity<?> saveTag(@RequestBody String name) {
+        if (name != null && !name.equals("")) {
+            return ResponseEntity.ok(tagService.saveTag(name));
         } else {
-            return tagService.saveTag(name);
+            return ResponseEntity.notFound().build();
         }
     }
 
     @GetMapping("/tag/{id}")
-    public Tag getTagById(@PathVariable(value = "id") Long id) {
-        if (id < 0) {
-            return null;
+    public ResponseEntity<Tag> getTagById(@PathVariable(value = "id") Long id) {
+        if (id > 0) {
+            return ResponseEntity.ok(tagService.getTagById(id));
         } else {
-            return tagService.getTagById(id);
+            return ResponseEntity.notFound().build();
         }
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete/{id}")
-    public String deleteTag(@PathVariable("id") Long id){
-        if (id < 0) {
-            return null;
+    public ResponseEntity<String> deleteTag(@PathVariable("id") Long id){
+        if (id > 0) {
+            return ResponseEntity.ok(tagService.deleteTag(id));
         } else {
-            return tagService.deleteTag(id);
+            return ResponseEntity.notFound().build();
         }
     }
 }

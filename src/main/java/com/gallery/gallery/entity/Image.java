@@ -1,19 +1,18 @@
 package com.gallery.gallery.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import javax.persistence.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Data
+@NoArgsConstructor
 @Entity
 @Table(name = "IMAGE")
 public class Image {
@@ -26,28 +25,20 @@ public class Image {
 
     @Lob
     @NonNull
-    @Column(name = "DATA")
     private byte[] data;
 
-    @Column(name = "NAME")
     private String name;
 
-    @Column(name = "TYPE")
     private String type;
 
-    @Column(name = "SIZE")
     private Long size;
 
-    @Column(name = "DESCRIPTION")
     private String description;
 
-    @Column(name = "HEIGHT")
     private int height;
 
-    @Column(name = "WIDTH")
     private int width;
 
-    @Column(name = "DATE")
     private String date = new SimpleDateFormat("yyyy.MM.dd").format(new Date());
 
     @JsonManagedReference
@@ -73,20 +64,4 @@ public class Image {
     @OneToOne(cascade = CascadeType.ALL)
     private ImageFull imageFull;
 
-    public Image() {
-    }
-
-    public Image(String name, String type, long size, byte[] data, String description, Integer height,
-                 Integer width, ImageFull imageFull, Set<Category> categories, Set<Tag> tags) {
-        this.name = name;
-        this.type = type;
-        this.size = size;
-        this.data = data;
-        this.height = height;
-        this.width = width;
-        this.description = description;
-        this.imageFull = imageFull;
-        this.categories = categories;
-        this.tags = tags;
-    }
 }

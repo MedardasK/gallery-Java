@@ -7,7 +7,6 @@ import com.gallery.gallery.entity.Category;
 import com.gallery.gallery.entity.Image;
 import com.gallery.gallery.entity.ImageFull;
 import com.gallery.gallery.entity.Tag;
-import com.gallery.gallery.exceptions.FileStorageException;
 import com.gallery.gallery.exceptions.NotFoundException;
 import com.gallery.gallery.payload.ImageUpdate;
 import com.gallery.gallery.payload.ImageUpload;
@@ -21,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.*;
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 

@@ -23,53 +23,53 @@ public class ImageController {
     }
 
     @GetMapping("/image/{id}")
-    public Image getImageById(@PathVariable(value = "id") Long id) {
-        if (id < 0) {
-            return null; // error string
+    public ResponseEntity<Image> getImageById(@PathVariable(value = "id") Long id) {
+        if (id > 0) {
+            return ResponseEntity.ok(imageService.getImage(id));
         } else {
-            return imageService.getImage(id);
+            return ResponseEntity.notFound().build();
         }
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PostMapping("/upload")
-    public Image uploadFile(@ModelAttribute ImageUpload imageUpload) {
-        if (imageUpload.getFile() == null || imageUpload.getCategories() == null || imageUpload.getTags() == null
-        || imageUpload.getDescription() == null){
-            return null; // error string
+    public ResponseEntity<Image> uploadFile(@ModelAttribute ImageUpload imageUpload) {
+        if (imageUpload.getFile() != null && imageUpload.getCategories() != null && imageUpload.getTags() != null
+        && imageUpload.getDescription() != null){
+            return ResponseEntity.ok(imageService.saveImage(imageUpload));
         } else {
-            return imageService.saveImage(imageUpload);
+            return ResponseEntity.notFound().build();
         }
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PutMapping("/update/{id}")
-    public Image updateImage(@PathVariable(value = "id") Long id, @ModelAttribute ImageUpdate imageUpdate) {
-        if (id < 0 || imageUpdate.getCategories() == null || imageUpdate.getTags() == null
-                || imageUpdate.getDescription() == null || imageUpdate.getName() == null){
-            return null; // error string
+    public ResponseEntity<Image> updateImage(@PathVariable(value = "id") Long id,
+                                             @ModelAttribute ImageUpdate imageUpdate) {
+        if (id > 0 && imageUpdate.getCategories() != null && imageUpdate.getTags() != null
+                && imageUpdate.getDescription() != null && imageUpdate.getName() != null){
+            return ResponseEntity.ok(imageService.updateImage(id, imageUpdate));
         } else {
-            return imageService.updateImage(id, imageUpdate);
+            return ResponseEntity.notFound().build();
         }
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteFile(@PathVariable(value = "id") Long id) {
-        if (id < 0) {
-            return null; // error string
+        if (id > 0) {
+            return ResponseEntity.ok(imageService.deleteImage(id));
         } else {
-            imageService.deleteImage(id);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.notFound().build();
         }
     }
 
     @GetMapping("/search/")
-    public List<Image> getAllImagesBySearch(@RequestParam String searchParams) {
-        if (searchParams.isEmpty() || searchParams == null) {
-            return null; // error string
+    public ResponseEntity<List<Image>> getAllImagesBySearch(@RequestParam String searchParams) {
+        if (!searchParams.isEmpty()) {
+            return ResponseEntity.ok(imageService.getAllImagesBySearch(searchParams));
         } else {
-            return imageService.getAllImagesBySearch(searchParams);
+            return ResponseEntity.notFound().build();
         }
     }
 }

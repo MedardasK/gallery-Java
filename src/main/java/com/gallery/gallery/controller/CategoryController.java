@@ -3,6 +3,7 @@ package com.gallery.gallery.controller;
 import com.gallery.gallery.entity.Category;
 import com.gallery.gallery.service.ICategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,21 +23,21 @@ public class CategoryController {
 
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PostMapping("/create")
-    public Category createCategory(@RequestBody String name) {
-        if (name == null) {
-            return null;
+    public ResponseEntity<Category> createCategory(@RequestBody String name) {
+        if (name != null && !name.equals("")) {
+            return ResponseEntity.ok(categoryService.saveCategory(name));
         } else {
-            return categoryService.saveCategory(name);
+            return ResponseEntity.notFound().build();
         }
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete/{id}")
-    public String deleteCategory(@PathVariable("id") Long id){
-        if (id < 0) {
-            return null;
+    public ResponseEntity<String> deleteCategory(@PathVariable("id") Long id){
+        if (id > 0) {
+            return ResponseEntity.ok(categoryService.deleteCategory(id));
         } else {
-            return categoryService.deleteCategory(id);
+            return ResponseEntity.notFound().build();
         }
     }
 
