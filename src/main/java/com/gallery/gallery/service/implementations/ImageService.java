@@ -84,7 +84,7 @@ public class ImageService implements IImageService {
 
         try {
             imageRep.deleteById(imageId);
-            return "Success";
+            return "\"Success\"";
         }
         catch (Exception err) {
             return err.toString();
